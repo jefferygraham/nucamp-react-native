@@ -37,6 +37,8 @@ function RenderCampsite(props) {
 
   const recognizeDrag = ({ dx }) => (dx < -200 ? true : false);
 
+  const recognizeComment = ({ dx }) => (dx > -200 ? true : false);
+
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
     onPanResponderGrant: () => {
@@ -68,6 +70,29 @@ function RenderCampsite(props) {
           ],
           { cancelable: false }
         );
+      }
+      if (recognizeDrag(gestureState)) {
+        Alert.alert(
+          'Add Favorite',
+          'Are you sure you wish to add ' + campsite.name + ' to favorites?',
+          [
+            {
+              text: 'Cancel',
+              style: 'cancel',
+              onPress: () => console.log('Cancel Pressed'),
+            },
+            {
+              text: 'OK',
+              onPress: () =>
+                props.favorite
+                  ? console.log('Already set as a favorite')
+                  : props.markFavorite(),
+            },
+          ],
+          { cancelable: false }
+        );
+      } else if (recognizeComment(gestureState)) {
+        props.onShowModal();
       }
       return true;
     },
